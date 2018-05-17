@@ -1,81 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="200dp">
+    android:layout_height="200dp"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/repoName"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="[Repo name]"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/repoDescription"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="[Repo description...]"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:background="#ffffff"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/repoName"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="[Repo name]"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/repoDescription"
-            android:text="[Repo description...]"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
+            android:layout_weight="5"
+            android:gravity="center"
             android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="0dp"
+            <ImageView
+                android:id="@+id/repoOwnerPic"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:src="@drawable/settings" />
 
-                <ImageView
-                    android:id="@+id/repoOwnerPic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/settings" />
-
-                <TextView
-                    android:id="@+id/repoOwner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="[repo owner name]"
-                    android:textColor="@android:color/black" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/repoOwner"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:text="[repo owner name]"
+                android:textColor="@android:color/black" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/star" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/repoStars"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="[number of stars]"
-                    android:textColor="@android:color/black" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/star" />
+
+            <TextView
+                android:id="@+id/repoStars"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="[number of stars]"
+                android:textColor="@android:color/black" />
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
