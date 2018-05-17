@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Activities.SplashActivity;
 import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Adapters.githubListAdapter;
 import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.R;
 
@@ -40,20 +41,18 @@ public class NewsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_news_main, container, false);
 
 
-//        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
-//
-//        // use this setting to improve performance if you know that changes
-//        // in content do not change the layout size of the RecyclerView
-//        mRecyclerView.setHasFixedSize(true);
-//
-//        // use a linear layout manager
-//        mLayoutManager = new LinearLayoutManager(getContext());
-//        mRecyclerView.setLayoutManager(mLayoutManager);
-//
-//        // specify an adapter (see also next example)
-//        mAdapter = new githubListAdapter(myDataset);
-//        mRecyclerView.setAdapter(mAdapter);
-//
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // specify an adapter (see also next example)
+        mAdapter = new githubListAdapter(getContext(), SplashActivity.gitReposElements);
+        mRecyclerView.setAdapter(mAdapter);
 
         return view; // inflater.inflate(R.layout.fragment_news_main, container, false);
     }
