@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Mobile_Coding_Challenge_Github_Best_Starred_30D</string>
     <string name="title_activity_main">MainActivity</string>
+
+
+
+    <string name="bottom_navigation_item_1">Trending</string>
+    <string name="bottom_navigation_item_2">Settings</string>
+
+
 </resources>

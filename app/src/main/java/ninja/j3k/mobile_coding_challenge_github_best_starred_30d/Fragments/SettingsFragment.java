@@ -8,6 +8,10 @@ import android.view.ViewGroup;
 
 import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.R;
 
+/**
+ * Created by J3K on 16.05.2018.
+ */
+
 public class SettingsFragment  extends Fragment{
         public static SettingsFragment newInstance() {
             SettingsFragment fragment = new SettingsFragment();
