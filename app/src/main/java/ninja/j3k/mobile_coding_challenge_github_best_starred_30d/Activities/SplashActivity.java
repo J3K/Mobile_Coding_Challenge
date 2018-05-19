@@ -49,8 +49,8 @@ public class SplashActivity extends AppCompatActivity {
             Client Client = new Client();
             Service apiService =
                     Client.getClient().create(Service.class);
-//            Call<gitResponse> call = apiService.getItems("2018-04-17");
-            Call<gitResponse> call = apiService.getItems("/search/repositories?q=created:>2018-04-17&sort=stars&order=desc");
+            Call<gitResponse> call = apiService.getItems("created:>2018-04-17","stars","desc",1);
+
             call.enqueue(new Callback<gitResponse>() {
                 @Override
                 public void onResponse(Call<gitResponse> call, Response<gitResponse> response) {
@@ -62,12 +62,12 @@ public class SplashActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<gitResponse> call, Throwable t) {
-
+                    Log.v("LoadJSONError", t.getMessage());
                 }
             });
 
         }catch (Exception e){
-            Log.d("LoadJSONError", e.getMessage());
+            Log.v("LoadJSONError", e.getMessage());
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
