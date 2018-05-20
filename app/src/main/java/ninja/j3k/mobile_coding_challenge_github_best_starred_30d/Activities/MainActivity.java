@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Fragments.NewsFragment;
@@ -17,6 +18,10 @@ import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.R;
  * Created by J3K on 16.05.2018.
  */
 
+/*
+*
+* NO COMMENTS NEEDED IS THIS PAGE, BASIC ACTIVITY, BASIC BOTTOM NAVIGATION IMPLEMENTATION.
+* */
 public class MainActivity  extends AppCompatActivity {
 
     @Override
@@ -26,8 +31,13 @@ public class MainActivity  extends AppCompatActivity {
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        try{
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        } catch (Exception e) {
+            Log.e("MainActivity","getSupportActionBar Exception : " + e);
+        }
 
+        // redundant.
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener

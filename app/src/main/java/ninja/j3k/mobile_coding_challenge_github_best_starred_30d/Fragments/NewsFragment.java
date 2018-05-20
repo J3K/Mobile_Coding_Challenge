@@ -1,7 +1,6 @@
 package ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,8 +10,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,20 +17,13 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.github.pwittchen.infinitescroll.library.InfiniteScrollListener;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Activities.MainActivity;
 import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Activities.SplashActivity;
 import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Adapters.githubListAdapter;
 import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Models.api.Client;
 import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Models.api.Service;
-import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Models.gitRepo;
 import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Models.gitResponse;
 import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.R;
 import retrofit2.Call;
@@ -58,7 +48,6 @@ public class NewsFragment extends Fragment {
     private int arraySize;
 
     private int page = 1;
-//    static public ArrayList<gitRepo> gitReposElements = new ArrayList<gitRepo>();
 
     public static NewsFragment newInstance() {
         NewsFragment fragment = new NewsFragment();
@@ -87,14 +76,17 @@ public class NewsFragment extends Fragment {
         mAdapter = new githubListAdapter(getContext(), SplashActivity.gitReposElements);
         mRecyclerView.setAdapter(mAdapter);
 
-//        Log.v("JSON-D-NewsFragment","SIZE:" + SplashActivity.gitReposElements.size());
-
+        // ADDING SEPARATOR TO THE RECYCLER VIEW.
         SeparatorDecoration decoration = new SeparatorDecoration(mContext, Color.LTGRAY, 1.5f);
         mRecyclerView.addItemDecoration(decoration);
 
+        // PAGINATION OR INFINITE SCROLL. USING addOnScrollListener, AS setOnScrollListener IN DEPRECATED
         mRecyclerView.addOnScrollListener(new InfiniteScrollListener(MAX_ITEMS_PER_REQUEST, mLayoutManager) {
                 @Override public void onScrolledToEnd(final int firstVisibleItemPosition) {
 
+                    // COUNTING IF THE NEXT PAGE SHOULD BE LOADED OT NOT.
+                    // TO AVOID MULTIPLE PAGE LOADING AT THE SAME TIME.
+                    // SOMETIMES THE onScrolledToEnd IS CALLED WHEN MULTIPLE SCROLL DOWN IS MADE AT THE BOTTOM OF THE LIST.
                     int counter = page;
                     int start =  counter * MAX_ITEMS_PER_REQUEST;
                     arraySize = SplashActivity.gitReposElements.size();
@@ -107,30 +99,16 @@ public class NewsFragment extends Fragment {
 
                     if (allItemsLoaded)
                     {
-//                        Log.v("JSON-D-NewsFragment","SIZE:" + SplashActivity.gitReposElements.size());
                         page++;
                         LoadNextJSON();
                     }
-
-//                    refreshView(mRecyclerView, new githubListAdapter(getContext(), gitReposElements), firstVisibleItemPosition);
                 }
             });
 
         return view; // inflater.inflate(R.layout.fragment_news_main, container, false);
     }
 
-
-
-
-//    @NonNull private ArrayList<gitRepo>  getItemsToBeLoaded(int start, int end) {
-//        List<gitRepo> newItems = SplashActivity.gitReposElements.subList(start, end);
-//        final ArrayList<gitRepo>  oldItems = ((githubListAdapter) mRecyclerView.getAdapter()).getItems();
-//        final ArrayList<gitRepo>  itemsLocal = new ArrayList<gitRepo> ();
-//        itemsLocal.addAll(oldItems);
-//        itemsLocal.addAll(newItems);
-//        return itemsLocal;
-//    }
-
+    // FUNCTION TO LOAD JSON INTO ARRAYLIST. USING RETROFIT IN CLIENT/SERVICE CLASSES/INTERFACE.
     private void LoadNextJSON(){
         try{
 
@@ -145,7 +123,6 @@ public class NewsFragment extends Fragment {
                 public void onResponse(Call<gitResponse> call, Response<gitResponse> response) {
                     SplashActivity.gitReposElements.addAll(response.body().getItems());
                     mAdapter.notifyDataSetChanged();
-
 
                     Log.v("JSON-D-NewsFragment", "" + response.raw().request().url());
                 }

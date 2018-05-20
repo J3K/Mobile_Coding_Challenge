@@ -39,10 +39,10 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mContext = this;
 
+        //  ADD 30 DAY TO CURRENT DATE.
         @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
 
-        //  ADD 30 DAY TO CURRENT DATE.
         cal.add(Calendar.DATE, -30);
         Log.v("DATEDATE","" + dateFormat.format(cal.getTime()));
         TIMESTAMP = dateFormat.format(cal.getTime());
@@ -51,6 +51,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
 
+    // FUNCTION TO LOAD JSON INTO ARRAYLIST. USING RETROFIT IN CLIENT/SERVICE CLASSES/INTERFACE.
     private void LoadJSON(){
         try{
 
