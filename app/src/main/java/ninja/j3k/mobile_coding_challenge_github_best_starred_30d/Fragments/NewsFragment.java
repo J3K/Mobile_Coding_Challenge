@@ -1,6 +1,7 @@
 package ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,15 +13,32 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.github.pwittchen.infinitescroll.library.InfiniteScrollListener;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Activities.MainActivity;
 import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Activities.SplashActivity;
 import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Adapters.githubListAdapter;
+import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Models.api.Client;
+import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Models.api.Service;
+import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Models.gitRepo;
+import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Models.gitResponse;
 import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by J3K on 16.05.2018.
@@ -29,10 +47,18 @@ import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.R;
 public class NewsFragment extends Fragment {
 
 
+    private static final int MAX_ITEMS_PER_REQUEST = 30;
+
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
 
+    private Context mContext;
+    private View view;
+    private int arraySize;
+
+    private int page = 1;
+//    static public ArrayList<gitRepo> gitReposElements = new ArrayList<gitRepo>();
 
     public static NewsFragment newInstance() {
         NewsFragment fragment = new NewsFragment();
@@ -48,28 +74,91 @@ public class NewsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_news_main, container, false);
+        view = inflater.inflate(R.layout.fragment_news_main, container, false);
+        mContext = getContext();
 
 
+        mLayoutManager = new LinearLayoutManager(mContext);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        // specify an adapter (see also next example)
+        // specify an adapter
         mAdapter = new githubListAdapter(getContext(), SplashActivity.gitReposElements);
         mRecyclerView.setAdapter(mAdapter);
 
+//        Log.v("JSON-D-NewsFragment","SIZE:" + SplashActivity.gitReposElements.size());
 
-        // add the decoration to the recyclerView
-        SeparatorDecoration decoration = new SeparatorDecoration(getContext(), Color.LTGRAY, 1.5f);
+        SeparatorDecoration decoration = new SeparatorDecoration(mContext, Color.LTGRAY, 1.5f);
         mRecyclerView.addItemDecoration(decoration);
 
+        mRecyclerView.addOnScrollListener(new InfiniteScrollListener(MAX_ITEMS_PER_REQUEST, mLayoutManager) {
+                @Override public void onScrolledToEnd(final int firstVisibleItemPosition) {
+
+                    int counter = page;
+                    int start =  counter * MAX_ITEMS_PER_REQUEST;
+                    arraySize = SplashActivity.gitReposElements.size();
+
+                    final boolean allItemsLoaded = start == arraySize;
+
+                    Log.v("JSON-D-NewsFragment","## allItemsLoaded : " + allItemsLoaded);
+                    Log.v("JSON-D-NewsFragment","## arraySize : " + arraySize);
+                    Log.v("JSON-D-NewsFragment","## start : " + start);
+
+                    if (allItemsLoaded)
+                    {
+//                        Log.v("JSON-D-NewsFragment","SIZE:" + SplashActivity.gitReposElements.size());
+                        page++;
+                        LoadNextJSON();
+                    }
+
+//                    refreshView(mRecyclerView, new githubListAdapter(getContext(), gitReposElements), firstVisibleItemPosition);
+                }
+            });
+
         return view; // inflater.inflate(R.layout.fragment_news_main, container, false);
+    }
+
+
+
+
+//    @NonNull private ArrayList<gitRepo>  getItemsToBeLoaded(int start, int end) {
+//        List<gitRepo> newItems = SplashActivity.gitReposElements.subList(start, end);
+//        final ArrayList<gitRepo>  oldItems = ((githubListAdapter) mRecyclerView.getAdapter()).getItems();
+//        final ArrayList<gitRepo>  itemsLocal = new ArrayList<gitRepo> ();
+//        itemsLocal.addAll(oldItems);
+//        itemsLocal.addAll(newItems);
+//        return itemsLocal;
+//    }
+
+    private void LoadNextJSON(){
+        try{
+
+//            Toast.makeText(mContext, "loading JSON...", Toast.LENGTH_SHORT).show();
+            Client Client = new Client();
+            Service apiService =
+                    Client.getClient().create(Service.class);
+            Call<gitResponse> call = apiService.getItems("created:>" + SplashActivity.TIMESTAMP,"stars","desc",page);
+
+            call.enqueue(new Callback<gitResponse>() {
+                @Override
+                public void onResponse(Call<gitResponse> call, Response<gitResponse> response) {
+                    SplashActivity.gitReposElements.addAll(response.body().getItems());
+                    mAdapter.notifyDataSetChanged();
+
+
+                    Log.v("JSON-D-NewsFragment", "" + response.raw().request().url());
+                }
+
+                @Override
+                public void onFailure(Call<gitResponse> call, Throwable t) {
+                    Log.v("JSON-E-NewsFragment", t.getMessage());
+                }
+            });
+
+        }catch (Exception e){
+            Log.v("JSON-E-NewsFragment", e.getMessage());
+        }
     }
 }
 class SeparatorDecoration extends RecyclerView.ItemDecoration {
