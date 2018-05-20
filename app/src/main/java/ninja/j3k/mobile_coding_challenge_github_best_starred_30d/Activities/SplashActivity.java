@@ -1,5 +1,6 @@
 package ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Models.api.Client;
 import ninja.j3k.mobile_coding_challenge_github_best_starred_30d.Models.api.Service;
@@ -27,18 +32,22 @@ import retrofit2.Response;
 public class SplashActivity extends AppCompatActivity {
 
     static public ArrayList<gitRepo> gitReposElements = new ArrayList<gitRepo>();
-
+    static public String TIMESTAMP = "";
     Context mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
 
-//        Intent intent = new Intent(this, MainActivity.class);
-//        startActivity(intent);
+        @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+
+        //  ADD 30 DAY TO CURRENT DATE.
+        cal.add(Calendar.DATE, -30);
+        Log.v("DATEDATE","" + dateFormat.format(cal.getTime()));
+        TIMESTAMP = dateFormat.format(cal.getTime());
 
         LoadJSON();
-//        finish();
     }
 
 
@@ -49,7 +58,7 @@ public class SplashActivity extends AppCompatActivity {
             Client Client = new Client();
             Service apiService =
                     Client.getClient().create(Service.class);
-            Call<gitResponse> call = apiService.getItems("created:>2018-04-17","stars","desc",1);
+            Call<gitResponse> call = apiService.getItems("created:>" + TIMESTAMP,"stars","desc",1);
 
             call.enqueue(new Callback<gitResponse>() {
                 @Override
